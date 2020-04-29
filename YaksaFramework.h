@@ -46,25 +46,44 @@ namespace Yaksa{
 #endif
 
 	template <typename WrapperType, typename Type = std::wstring>
+	using WideStringTypeDefine =
+		typename TemplateType<WrapperType, Type>::_Type;
+	template <typename WrapperType, typename Type = wchar_t>
+	using WCharTypeDefine =
+		typename TemplateType<WrapperType, Type>::_Type;
+	template <typename WrapperType, typename Type = wchar_t>
+	using WCharTypePtrDefine =
+		typename TemplateType<WrapperType, Type>::_Type*;
+
+	template <typename WrapperType, typename Type = std::string>
 	using StringTypeDefine =
 		typename TemplateType<WrapperType, Type>::_Type;
+	template <typename WrapperType, typename Type = char>
+	using CharTypeDefine =
+		typename TemplateType<WrapperType, Type>::_Type;
+	template <typename WrapperType, typename Type = char>
+	using CharTypePtrDefine =
+		typename TemplateType<WrapperType, Type>::_Type*;
 
 	template <typename Type,
 		typename WrapperType =
 		TemplateType<Type, void>,
 		typename NativeViewType = ViewTypeDefine<Type>,
-		typename CharStrType = StringTypeDefine<Type>,
+		typename WCharStrType = WideStringTypeDefine<Type>,
+		typename CharType = CharTypeDefine<Type>,
 		typename NativeViewType_ = NativeViewType,
-		typename CharStrType_ = CharStrType>struct WrapperTypes {
+		typename WCharStrType_ = WCharStrType,
+		typename CharType_ = CharType>struct WrapperTypes {
 
 		using _Myt = WrapperType;
 		using _NativeViewType = NativeViewType;
-		using _CharStrType = CharStrType_;
+		using _WCharStrType = WCharStrType_;
+		using _CharType = CharType_;
 	};
-	using WindowType = WrapperTypes<void>::_NativeViewType;
-	using strType = WrapperTypes<void>::_CharStrType;
 
-	typedef char type_char;
+	using WindowType = WrapperTypes<void>::_NativeViewType;
+	using wstrType = WrapperTypes<void>::_WCharStrType;
+	using type_char = WrapperTypes<void>::_CharType;
 
 #if defined(DATA_PACKAGE_BUILD)
 	extern "C" int __declspec(dllexport)
