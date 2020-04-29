@@ -7,7 +7,7 @@
 #ifndef __data_connector_api_h___
 #define __data_connector_api_h___
 
-////--꧁///////////////////////////////////༺TONOSHIKI PIYOMA༻///////////////////////////////////꧂
+////--꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
 ////           
 ////	               A cross-platform Framework that Can embedded All Systems and Platforms.
 ////                     eg. Windows, linux, Unity, UnrealEngine4, Qt, and etc.
