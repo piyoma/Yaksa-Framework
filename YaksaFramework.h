@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 
 
-#ifndef __data_connector_api_h___
-#define __data_connector_api_h___
+#ifndef __yaksa_framework_h___
+#define __yaksa_framework_h___
 
 ////--꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
 ////           
