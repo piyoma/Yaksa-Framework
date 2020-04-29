@@ -17,6 +17,11 @@
 ////                                                
 ////--꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
 
+
+#if defined(OS_WIN)
+#include <windows.h>
+#endif
+
 #include <string>
 
 namespace Yaksa{
