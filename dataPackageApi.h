@@ -1,19 +1,21 @@
-
+﻿
 // Copyright (c) 2011 The YaksaFramework Authors piyuoma. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 
-///////////////////////////////////////////////////////
-//                                                   //
-//  GitHub https://github.com/piyoma/YaksaFramework  //
-//                                                   //
-///////////////////////////////////////////////////////
-
 #ifndef __data_connector_api_h___
 #define __data_connector_api_h___
 
-#pragma once
+////--꧁///////////////////////////////////༺TONOSHIKI PIYOMA༻///////////////////////////////////꧂
+////           
+////	               A cross-platform Framework that Can embedded All Systems and Platforms.
+////                     eg. Windows, linux, Unity, UnrealEngine4, Qt, and etc.
+////                                     2020/04/29 piyoma
+////
+////                       GitHub https://github.com/piyoma/YaksaFramework   
+////                                                
+////--꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
 
 #include <string>
 
