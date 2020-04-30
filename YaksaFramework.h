@@ -131,6 +131,17 @@ namespace Yaksa{
 		using _WCharStrType = WCharStrType_;
 		using _CharType = CharType_;
 	};
+	template<typename L>
+	struct TypeLambdaTraits : TypeLambdaTraits<decltype(&L::operator())> {};
+	template<typename C, typename R, typename... A>
+	struct TypeLambdaTraits<R(C::*)(A...) const> {
+	};
+	template<typename C, typename R, typename A>
+	struct TypeLambdaTraits<R(C::*)(A) const> {
+		static const bool valid = true;
+		using TypeArg = typename std::remove_const<typename std::remove_reference<A>::type>::type;
+		using TypeR = R;
+	};
 
 	using NativeView =
 		WrapperTypes<void>::_NativeViewType;
