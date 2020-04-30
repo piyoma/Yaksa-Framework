@@ -85,25 +85,21 @@ namespace Yaksa{
 	using ModuleHandleType =
 		typename TemplateType<WrapperType, Type>::_Type;
 #endif
-	template <typename WrapperType, typename Type = std::wstring>
-	using WideStringTypeDefine =
-		typename TemplateType<WrapperType, Type>::_Type;
-	template <typename WrapperType, typename Type = wchar_t>
-	using WCharTypeDefine =
-		typename TemplateType<WrapperType, Type>::_Type;
-	template <typename WrapperType, typename Type = wchar_t>
-	using WCharTypePtrDefine =
-		typename TemplateType<WrapperType, Type>::_Type*;
 
-	template <typename WrapperType, typename Type = std::string>
-	using StringTypeDefine =
-		typename TemplateType<WrapperType, Type>::_Type;
-	template <typename WrapperType, typename Type = char>
-	using CharTypeDefine =
-		typename TemplateType<WrapperType, Type>::_Type;
-	template <typename WrapperType, typename Type = char>
-	using CharTypePtrDefine =
-		typename TemplateType<WrapperType, Type>::_Type*;
+#ifndef YAKSA_DEFINE_TYPE
+
+#define YAKSA_DEFINE_TYPE(NAME, obj, type_def, type, ptr_det, ptr);\
+	template <typename WrapperType, typename Type = obj>\
+	using NAME = typename TemplateType<WrapperType, Type>::_Type;\
+	template <typename WrapperType, typename Type = type>\
+	using type_def = typename TemplateType<WrapperType, Type>::_Type;\
+	template <typename WrapperType, typename Type = sub>\
+	using ptr_det = typename TemplateType<WrapperType, Type>::_Type*;
+
+#endif // !YAKSA_DEFINE_TYPE
+
+	YAKSA_DEFINE_TYPE(WideStringTypeDefine, std::wstring, WCharTypeDefine, wchar_t, WCharTypePtrDefine, wchar_t*)
+	YAKSA_DEFINE_TYPE(StringTypeDefine, std::string, CharTypeDefine, char, CharTypePtrDefine, char*)
 
 	template <typename Type,
 		typename WrapperType =
