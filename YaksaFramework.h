@@ -100,8 +100,12 @@ namespace Yaksa{
 
 #endif // !YAKSA_DEFINE_TYPE
 
-	YAKSA_DEFINE_TYPE(WideStringTypeDefine, std::wstring, WCharTypeDefine, wchar_t, WCharTypePtrDefine, wchar_t*)
-	YAKSA_DEFINE_TYPE(StringTypeDefine, std::string, CharTypeDefine, char, CharTypePtrDefine, char*)
+	YAKSA_DEFINE_TYPE(WideStringTypeDefine, 
+		std::wstring, WCharTypeDefine, 
+		wchar_t, WCharTypePtrDefine, wchar_t*)
+	YAKSA_DEFINE_TYPE(StringTypeDefine, 
+		std::string, CharTypeDefine, 
+		char, CharTypePtrDefine, char*)
 
 	template <typename Type,
 		typename WrapperType =
