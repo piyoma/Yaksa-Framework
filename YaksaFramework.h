@@ -113,11 +113,11 @@ namespace Yaksa{
 #if defined(OS_WIN)
 #if defined(YAKSA_BUILD)
 	extern "C" int __declspec(dllexport)
-		cdecl YaksaCall(void* obj, void* cmd, void* arg,
+		cdecl YaksaExec(void* obj, void* cmd, void* arg,
 			void* callback, void* obj_invoke, int msgid);
 #else
 	extern "C" int __declspec(dllimport)
-		cdecl YaksaCall(void* obj, void* cmd, void* arg,
+		cdecl YaksaExec(void* obj, void* cmd, void* arg,
 			void* callback, void* obj_invoke, int msgid);
 #endif
 #endif //OS_WIN
