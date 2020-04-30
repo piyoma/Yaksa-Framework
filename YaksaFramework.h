@@ -317,9 +317,9 @@ type_char* data, int len, int msgid);
 
 						component.Load(L"LocalPath", L"Yaksa.Module.Bar");
 
-						component.exec(value_param("FooObj"), value_param("bar"), 0,  
-						
-						YaksaCallee(Foo, &Foo::Callee, this), 0);
+						component.exec(value_param("FooObj"), 
+						value_param("bar"), 0,
+						&Foo::Callee, this, 0);
 	
 
 					}
@@ -459,10 +459,13 @@ type_char* data, int len, int msgid);
 	template <typename T>
 	class TypeCast {
 		typedef void (T::* sig)(type_char* obj, type_char* cmd, type_char* data_type,
-			type_char* data, int len, int msgid);;
+			type_char* data, int len, int msgid); 
 	};
 	template<typename Obj> class SingleComponent{
 	public:
+		typedef void (Obj::* Sig)(type_char* obj, type_char* cmd, type_char* data_type,
+			type_char* data, int len, int msgid);
+
 		SingleComponent() {};
 		~SingleComponent() {};
 
@@ -511,11 +514,11 @@ type_char* data, int len, int msgid);
 #endif
 		
 		void exec(void* obj, void* cmd, void* arg,
-				void* callback, int msgid)
+			Sig callback, Obj* caller, int msgid)
 		{
 			if (execPackageObj) {
 
-					execPackageObj(obj, cmd, arg, callback, 0, msgid);
+					execPackageObj(obj, cmd, arg, YaksaCallee(Obj, callback, caller), 0, msgid);
 			}
 		}
 	private:
