@@ -90,13 +90,13 @@ namespace Yaksa{
 
 //-------------------------꧁༒༒༒DEFINE TYPES༻༒༒༒-------------------------꧂
 
-				#define YAKSA_DEFINE_TYPE(NAME, obj, type_def, type, ptr_det, ptr);\
-						template <typename WrapperType, typename Type = obj>\
-						using NAME = typename TemplateType<WrapperType, Type>::_Type;\
-						template <typename WrapperType, typename Type = type>\
-						using type_def = typename TemplateType<WrapperType, Type>::_Type;\
-						template <typename WrapperType, typename Type = sub>\
-						using ptr_det = typename TemplateType<WrapperType, Type>::_Type*;
+#define YAKSA_DEFINE_TYPE(NAME, obj, type_def, type, ptr_det, ptr);\
+				template <typename WrapperType, typename Type = obj>\
+				using NAME = typename TemplateType<WrapperType, Type>::_Type;\
+				template <typename WrapperType, typename Type = type>\
+				using type_def = typename TemplateType<WrapperType, Type>::_Type;\
+				template <typename WrapperType, typename Type = sub>\
+				using ptr_det = typename TemplateType<WrapperType, Type>::_Type*;
 
 
 #endif // !YAKSA_DEFINE_TYPE
