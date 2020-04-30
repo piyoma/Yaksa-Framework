@@ -35,7 +35,7 @@
 
 namespace Yaksa{
 
-	namespace dataConnectApi {
+	namespace Api {
 
 #if defined(_M_IX86) || defined (_M_AMD64)
 
@@ -272,8 +272,8 @@ type_char* data, int len, int msgid);
 #endif
 
 #ifndef dataPackageExec
-#define  dataPackageExec(func, obj, cmd, arg, callback, handler, msgid, caller, type) \
-	func(obj, cmd, arg, callback, dataBind<type>(&handler, caller), msgid);
+#define  dataPackageExec(func, obj, cmd, arg, callback, handler, msgid, type) \
+	func(obj, cmd, arg, callback, dataBind<type>(callback, this), msgid)
 #endif
 
 #ifndef CallExec //local 
@@ -296,6 +296,44 @@ type_char* data, int len, int msgid);
 	func(obj, cmd, arg, 0, 0, 0);
 #endif
 
+#ifndef YaksaCallee
+#define YaksaCallee(type, callback, callee)\
+	dataBind<type>(callback, callee)
+#endif // !YaksaCallback
+
+	/*
+		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒꧂
+          
+					
+
+			class Foo
+			{
+					public:
+					Foo() {}
+					~Foo(){}
+					void asnyc_work()
+					{
+						//////////Load and CallModule//////////
+
+						component.Load(L"LocalPath", L"Yaksa.Module.Bar");
+
+						component.exec(value_param("FooObj"), value_param("bar"), 0,  
+						
+						YaksaCallee(Foo, &Foo::Callee, this), 0);
+	
+
+					}
+					void Callee(type_char* obj, type_char* cmd, type_char* data_type,
+							type_char* data, int len, int msgid)
+					{
+							//////////Do Some Asnyc Works//////////
+					}
+
+					private:
+					SingleComponent<Foo>  component;
+			};
+
+	*/
 	class dataObjEventHandler;
 
 	class dataRefBase
@@ -407,6 +445,7 @@ type_char* data, int len, int msgid);
 	{
 		return new objEventHandlerImpl<P, T>(o, sig);
 	};
+	
 	template<typename type = dataObjEventHandler>
 	class dataPackageTemplate {
 	public:
@@ -475,8 +514,8 @@ type_char* data, int len, int msgid);
 				void* callback, int msgid)
 		{
 			if (execPackageObj) {
-				execPackageObj(obj, cmd, arg,
-					callback, 0, msgid);
+
+					execPackageObj(obj, cmd, arg, callback, 0, msgid);
 			}
 		}
 	private:
