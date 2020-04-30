@@ -23,6 +23,12 @@
 
 #if defined(OS_WIN)
 #include <windows.h>
+#else 
+#if defined(OS_LINUX)
+#include <stdio.h>  
+#include <stdlib.h>   
+#include <dlfcn.h>   
+#endif 
 #endif
 
 #include <string>
@@ -70,6 +76,15 @@ namespace Yaksa{
 		typename TemplateType<WrapperType, Type>::_Type;
 #endif
 
+#if defined(OS_WIN)
+	template <typename WrapperType, typename Type = HMODULE>
+	using ModuleHandleType =
+		typename TemplateType<WrapperType, Type>::_Type;
+#else
+	template <typename WrapperType, typename Type = void*>
+	using ModuleHandleType =
+		typename TemplateType<WrapperType, Type>::_Type;
+#endif
 	template <typename WrapperType, typename Type = std::wstring>
 	using WideStringTypeDefine =
 		typename TemplateType<WrapperType, Type>::_Type;
@@ -93,21 +108,29 @@ namespace Yaksa{
 	template <typename Type,
 		typename WrapperType =
 		TemplateType<Type, void>,
+		//define NativeView
 		typename NativeViewType = ViewTypeDefine<Type>,
-		typename WCharStrType = WideStringTypeDefine<Type>,
-		typename CharType = CharTypeDefine<Type>,
 		typename NativeViewType_ = NativeViewType,
+		//define wchar_t
+		typename WCharStrType = WideStringTypeDefine<Type>,
 		typename WCharStrType_ = WCharStrType,
-		typename CharType_ = CharType>struct WrapperTypes {
+		//define std::string
+		typename CharStrType = StringTypeDefine<Type>,
+		typename CharStrType_  = CharStrType,
+		//define char
+		typename CharType = CharTypeDefine<Type>,
+		typename CharType_ = CharType> struct WrapperTypes {
 
 		using _Myt = WrapperType;
 		using _NativeViewType = NativeViewType;
+		using _CharStrType = CharStrType_;
 		using _WCharStrType = WCharStrType_;
 		using _CharType = CharType_;
 	};
 
-	using WindowType = WrapperTypes<void>::_NativeViewType;
-	using wstrType = WrapperTypes<void>::_WCharStrType;
+	using NativeView = WrapperTypes<void>::_NativeViewType;
+	using type_str = WrapperTypes<void>::_CharStrType;
+	using type_wstr = WrapperTypes<void>::_WCharStrType;
 	using type_char = WrapperTypes<void>::_CharType;
 
 #if defined(OS_WIN)
@@ -121,6 +144,14 @@ namespace Yaksa{
 			void* callback, void* obj_invoke, int msgid);
 #endif
 #endif //OS_WIN
+
+//////////MACRO PIYOMA DEFINE//////////
+
+#ifndef _STRING_Const_Ptr_
+#define _STRING_Const_Ptr_(val)  val.c_str()
+#endif
+
+//////////MACRO FIN//////////
 
 	typedef int(*InitPackageModule)(void* callback);
 
@@ -220,6 +251,40 @@ namespace Yaksa{
 	void operator=(const TypeName&)
 #define  DATA_CONNECTOR_OBJ_NAME(NAME) virtual const char* obj_id() \
 	override {return NAME;}
+#ifndef DATA_DECL
+#define  DATA_DECL(name) void name(type_char* obj, type_char* cmd, type_char* data_type,\
+type_char* data, int len, int msgid);
+#endif
+
+#ifndef EXPORT_DECL
+#define  EXPORT_DECL(name, ret, ...) void name(type_char* obj, type_char* cmd, type_char* data_type,\
+type_char* data, int len, int msgid);
+#endif
+
+#ifndef dataPackageExec
+#define  dataPackageExec(func, obj, cmd, arg, callback, handler, msgid, caller, type) \
+	func(obj, cmd, arg, callback, dataBind<type>(&handler, caller), msgid);
+#endif
+
+#ifndef CallExec //local 
+#define CallExec(obj, cmd, arg, handler)\
+	dataPackageExec(YaksaCall, obj, cmd, arg, nullptr, handler, -1, nullptr, -1)
+#endif 
+
+#ifndef DispatchEvent
+#define DispatchEvent(obj, event_name, arg)\
+	dataPackageExec(YaksaCall, obj, event_name, arg, nullptr, nullptr, -1, nullptr, -1)
+#endif 
+
+#ifndef CallRPC //remote
+#define RpcExec(obj, cmd, arg, handler)\
+	dataPackageExec(YaksaCall, obj, cmd, arg, nullptr, handler, -1, nullptr, -1)
+#endif 
+
+#ifndef dataExecNULL
+#define  dataExecNULL(YaksaCall, obj, cmd, arg) \
+	func(obj, cmd, arg, 0, 0, 0);
+#endif
 
 	class dataObjEventHandler;
 
@@ -274,8 +339,9 @@ namespace Yaksa{
 	private:
 		DATA_DISALLOW_COPY_AND_ASSIGN(dataRefCounter<T>);
 	};
+	template<typename type>
 	class dataObj
-		: public dataRefCounter<dataObj>
+		: public dataRefCounter<type>
 	{
 	public:
 
@@ -287,7 +353,7 @@ namespace Yaksa{
 	};
 
 	class  dataObjEventHandler
-		: public  dataObj
+		: public  dataObj<dataObjEventHandler>
 	{
 	public:
 
@@ -346,42 +412,69 @@ namespace Yaksa{
 		typedef void (T::* sig)(type_char* obj, type_char* cmd, type_char* data_type,
 			type_char* data, int len, int msgid);;
 	};
+	template<typename Obj> class SingleComponent{
+	public:
+		SingleComponent() {};
+		~SingleComponent() {};
 
+#if defined(OS_WIN)
+		bool Load(type_wstr path, type_wstr module_name){
 
-#ifndef DATA_DECL
-#define  DATA_DECL(name) void name(type_char* obj, type_char* cmd, type_char* data_type,\
-type_char* data, int len, int msgid);
+			ModuleHandleType module	
+				= nullptr;
+			type_wstr dllPath =
+				path + module_name; 
+			dllPath += L".dll";
+			module = LoadLibrary(
+				_STRING_Const_Ptr_(dllPath)
+			);
+			if (module)
+			{
+				execPackageObjectFunc execPackageObj 
+					= (execPackageObjectFunc)
+				GetProcAddress(module, L"YaksaExec");
+
+				return true;
+			}
+			return false;
+		 }
+#else
+		bool Load(type_char* path, type_char*module_name) {
+
+			ModuleHandleType module
+				= nullptr;
+			type_str dllPath = path;
+			path += module_name;
+			dllPath += L".so";
+			module = dlopen(_STRING_Const_Ptr_(dllPath), RTLD_LAZY);
+
+			);
+			if (module)
+			{
+				execPackageObjectFunc execPackageObj
+					= (execPackageObjectFunc)
+					dlsym(module, "YaksaExec");
+
+				return true;
+			}
+			return false;
+		}
 #endif
+		
+		void exec(void* obj, void* cmd, void* arg,
+				void* callback, int msgid)
+		{
+			if (execPackageObj) {
+				execPackageObj(obj, cmd, arg,
+					callback, 0, msgid);
+			}
+		}
+	private:
+		execPackageObjectFunc execPackageObj = nullptr;
+	};
 
-#ifndef EXPORT_DECL
-#define  EXPORT_DECL(name, ret, ...) void name(type_char* obj, type_char* cmd, type_char* data_type,\
-type_char* data, int len, int msgid);
-#endif
 
-#ifndef dataPackageExec
-#define  dataPackageExec(func, obj, cmd, arg, callback, handler, msgid, caller, type) \
-	func(obj, cmd, arg, callback, dataBind<type>(&handler, caller), msgid);
-#endif
 
-#ifndef CallExec //local 
-#define CallExec(obj, cmd, arg, handler)\
-	dataPackageExec(YaksaCall, obj, cmd, arg, nullptr, handler, -1, nullptr, -1)
-#endif 
-
-#ifndef DispatchEvent
-#define DispatchEvent(obj, event_name, arg)\
-	dataPackageExec(YaksaCall, obj, event_name, arg, nullptr, nullptr, -1, nullptr, -1)
-#endif 
-
-#ifndef CallRPC //remote
-#define RpcExec(obj, cmd, arg, handler)\
-	dataPackageExec(YaksaCall, obj, cmd, arg, nullptr, handler, -1, nullptr, -1)
-#endif 
-
-#ifndef dataExecNULL
-#define  dataExecNULL(YaksaCall, obj, cmd, arg) \
-	func(obj, cmd, arg, 0, 0, 0);
-#endif
 
 	}//dataConnectApi
 
