@@ -495,9 +495,9 @@ type_char* data, int len, int msgid);
 			);
 			if (module)
 			{
-				execPackageObjectFunc execPackageObj 
-					= (execPackageObjectFunc)
-				GetProcAddress(module, "YaksaExec");
+					execPackageObj
+						= (execPackageObjectFunc)
+						GetProcAddress(module, "YaksaExec");
 
 				return true;
 			}
