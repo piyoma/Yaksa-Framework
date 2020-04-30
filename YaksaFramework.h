@@ -78,7 +78,7 @@ namespace Yaksa{
 
 #if defined(OS_WIN)
 	template <typename WrapperType, typename Type = HMODULE>
-	using ModuleHandleType =
+	using ModuleHandleDefine =
 		typename TemplateType<WrapperType, Type>::_Type;
 #else
 	template <typename WrapperType, typename Type = void*>
@@ -111,6 +111,9 @@ namespace Yaksa{
 		//define NativeView
 		typename NativeViewType = ViewTypeDefine<Type>,
 		typename NativeViewType_ = NativeViewType,
+		//define NativeHandle
+		typename NativeModuleHandle = ModuleHandleDefine<Type>,
+		typename NativeModuleHandle_ = NativeModuleHandle,
 		//define wchar_t
 		typename WCharStrType = WideStringTypeDefine<Type>,
 		typename WCharStrType_ = WCharStrType,
@@ -123,15 +126,22 @@ namespace Yaksa{
 
 		using _Myt = WrapperType;
 		using _NativeViewType = NativeViewType;
+		using _NativeModuleHandle = NativeModuleHandle_;
 		using _CharStrType = CharStrType_;
 		using _WCharStrType = WCharStrType_;
 		using _CharType = CharType_;
 	};
 
-	using NativeView = WrapperTypes<void>::_NativeViewType;
-	using type_str = WrapperTypes<void>::_CharStrType;
-	using type_wstr = WrapperTypes<void>::_WCharStrType;
-	using type_char = WrapperTypes<void>::_CharType;
+	using NativeView =
+		WrapperTypes<void>::_NativeViewType;
+	using NativeModuleHandle = 
+		WrapperTypes<void>::_NativeModuleHandle;
+	using type_str = 
+		WrapperTypes<void>::_CharStrType;
+	using type_wstr = 
+		WrapperTypes<void>::_WCharStrType;
+	using type_char = 
+		WrapperTypes<void>::_CharType;
 
 #if defined(OS_WIN)
 #if defined(YAKSA_BUILD)
@@ -420,19 +430,19 @@ type_char* data, int len, int msgid);
 #if defined(OS_WIN)
 		bool Load(type_wstr path, type_wstr module_name){
 
-			ModuleHandleType module	
+			NativeModuleHandle module
 				= nullptr;
 			type_wstr dllPath =
 				path + module_name; 
 			dllPath += L".dll";
-			module = LoadLibrary(
+			module = LoadLibraryW(
 				_STRING_Const_Ptr_(dllPath)
 			);
 			if (module)
 			{
 				execPackageObjectFunc execPackageObj 
 					= (execPackageObjectFunc)
-				GetProcAddress(module, L"YaksaExec");
+				GetProcAddress(module, "YaksaExec");
 
 				return true;
 			}
@@ -441,7 +451,7 @@ type_char* data, int len, int msgid);
 #else
 		bool Load(type_char* path, type_char*module_name) {
 
-			ModuleHandleType module
+			NativeModuleHandle module
 				= nullptr;
 			type_str dllPath = path;
 			path += module_name;
