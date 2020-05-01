@@ -11,56 +11,56 @@
            
           ꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂          
 
-                  A cross-platform GUI Framework Wrapped Chromium that Can embedded All Systems and Platforms.
-                  eg. Windows, linux, macOS, Android, iOS, Unity, UnrealEngine4, Qt, and etc.
-                  2020/04/29 piyoma
-                 break;
-                 ༺GitHub https://github.com/piyoma/YaksaFramework༻    
+                A cross-platform GUI Framework Wrapped Chromium that Can embedded All Systems and Platforms.
+                eg. Windows, linux, macOS, Android, iOS, Unity, UnrealEngine4, Qt, and etc.
+                2020/04/29 piyoma
+                break;
+                ༺GitHub https://github.com/piyoma/YaksaFramework༻    
      
 
-			////////////////////////////////////////////////༺TONOSHIKI PIYOMA////////////////////////////////////////////////
+		////////////////////////////////////////////////༺TONOSHIKI PIYOMA////////////////////////////////////////////////
 
 
-			This Header File implements cross-platform Component  design( call and callback), completely abstract,
-			blocking the coupling between modules. you can call a object simplely cross any Operating Systems and Platforms as follow:
+		This Header File implements cross-platform Component  design( call and callback), completely abstract,
+		blocking the coupling between modules. you can call a object simplely cross any Operating Systems and Platforms as follow:
 
-			Foo foo;
-			foo.Initialize();
-			foo.asnyc_work(); // call a obj method like Yaksa.Module.Bar  or Yaksa.Module.Foo
+		Foo foo;
+		foo.Initialize();
+		foo.asnyc_work(); // call a obj method like Yaksa.Module.Bar  or Yaksa.Module.Foo
 
-			//At First should define a class like this
+		//At First should define a class like this
 
-			class Foo
+		class Foo
+		{
+			public:
+			Foo() {}
+			~Foo(){}
+			void asnyc_work()
 			{
-				public:
-				Foo() {}
-				~Foo(){}
-				void asnyc_work()
-				{
 					
-					if( component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
-					{
-
-						component.exec(value_param("FooObj"),
-						value_param("bar"), 0,
-						&Foo::Callee, this, 0);
-
-					}
-
-				}
-				void Callee(type_char* obj, type_char* cmd, type_char* data_type,
-						type_char* data, int len, int msgid)
+				if( component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
 				{
-						//////////Do Some Asnyc Works//////////
+
+					component.exec(value_param("FooObj"),
+					value_param("bar"), 0,
+					&Foo::Callee, this, 0);
+
 				}
 
-				private:
-				SingleComponent<Foo>  component;
-			};
+			}
+			void Callee(type_char* obj, type_char* cmd, type_char* data_type,
+					type_char* data, int len, int msgid)
+			{
+					//////////Do Some Asnyc Works//////////
+			}
+
+			private:
+			SingleComponent<Foo>  component;
+		};
 
 		
 
-			2020/05/01 piyoma
+		2020/05/01 piyoma
 
 
 */
