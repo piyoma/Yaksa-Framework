@@ -21,8 +21,9 @@
 		////////////////////////////////////////////////༺TONOSHIKI PIYOMA////////////////////////////////////////////////
 
 
-		This Header File implements cross-platform Component  design( call and callback), completely abstract,
-		blocking the coupling between modules. you can call a object simplely cross any Operating Systems and Platforms as follow:
+		This Header File implements cross-platform Component  design( call and sync-async callback), 
+		completely abstract,blocking the coupling between modules. 
+		you can call a object simplely In any Operating Systems and Platforms, as follows:
 
 		Foo foo;
 		foo.Initialize();
