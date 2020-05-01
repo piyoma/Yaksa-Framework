@@ -25,9 +25,46 @@
 		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂
 
 
-		This Header File implements cross-platform Component  design( call and callback), completely abstract,
-		blocking the coupling between modules.
-		2020/05/01 piyoma
+			This Header File implements cross-platform Component  design( call and callback), completely abstract,
+			blocking the coupling between modules. you can call a object simplely cross any Operating Systems and Platforms as follow:
+
+			Foo foo;
+			foo.Initialize();
+			foo.asnyc_work();
+
+			//At First should define a class like this
+
+			class Foo
+			{
+					public:
+					Foo() {}
+					~Foo(){}
+					void asnyc_work()
+					{
+					
+						if( component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
+						{
+
+							component.exec(value_param("FooObj"),
+							value_param("bar"), 0,
+							&Foo::Callee, this, 0);
+
+						}
+
+					}
+					void Callee(type_char* obj, type_char* cmd, type_char* data_type,
+							type_char* data, int len, int msgid)
+					{
+							//////////Do Some Asnyc Works//////////
+					}
+
+					private:
+					SingleComponent<Foo>  component;
+			};
+
+		
+
+			2020/05/01 piyoma
 
 
 */
@@ -545,40 +582,9 @@ type_char* data, int len, int msgid);
 	public:
 
 			/*
-		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒꧂
-
-
+	
 			////////////////////////////////////Usage: as follow////////////////////////////////////
-			class Foo
-			{
-					public:
-					Foo() {}
-					~Foo(){}
-					void asnyc_work()
-					{
-						//////////Load and Call Module//////////
-
-						if( //////////Check ret var if true then Call Module's method//////////
-
-						component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
-						{
-
-							component.exec(value_param("FooObj"),
-							value_param("bar"), 0,
-							&Foo::Callee, this, 0);
-
-						}
-
-					}
-					void Callee(type_char* obj, type_char* cmd, type_char* data_type,
-							type_char* data, int len, int msgid)
-					{
-							//////////Do Some Asnyc Works//////////
-					}
-
-					private:
-					SingleComponent<Foo>  component;
-			};
+			
 
 	*/
 
