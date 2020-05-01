@@ -123,8 +123,9 @@ namespace Yaksa{
 	use TYPE = cxx class_type<WrapperType, Type>::type_var;
 #endif // !_TYPE_DEFNE_MACRO_
 /*
-		in clang++ ocurred error: 
-		pasting formed 'cxx', an invalid preprocessing token
+		In Clang++ ocurred error: 
+		" pasting formed 'cxx', an invalid preprocessing token "
+		so Need special treatment
 */
 #if defined(OS_WIN)
 #ifndef _YAKSA_DEFINE_TYPE_ 
@@ -150,15 +151,15 @@ namespace Yaksa{
 #endif // !YAKSA_DEFINE_TYPE
 
 
-	template<typename type> struct template_type {
-		using  type_t = type;
+	template<typename Type> struct TypeTemplate {
+		using  Type_ = Type;
 	};
 	template<typename ClassType, typename Type> struct TemplateType {
 
-		using _ClassType = typename template_type<ClassType>::type_t;
-		using _ClassPtr = typename template_type<_ClassType*>::type_t;
-		using _Type = typename template_type<Type>::type_t;
-		using _TypePtr = typename template_type<Type*>::type_t;
+		using _ClassType = typename TypeTemplate<ClassType>::Type_;
+		using _ClassPtr = typename TypeTemplate<_ClassType*>::Type_;
+		using _Type = typename TypeTemplate<Type>::Type_;
+		using _TypePtr = typename TypeTemplate<Type*>::Type_;
 
 	};
 #if defined(OS_WIN)
@@ -183,6 +184,8 @@ namespace Yaksa{
 /*
 		For the purpose of Neat and Order
 		Finally Register All defined basic types in WrapperType
+		If you do n’t like this way,
+		I will append a macro definition to isolate these later
 */
 		typename NativeViewType = ViewTypeDefine<Type>,
 		typename NativeModuleHandle = ModuleHandleDefine<Type>,
