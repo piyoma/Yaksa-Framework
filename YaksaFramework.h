@@ -33,26 +33,45 @@
 
 #include <string>
 
+#ifdef USE_STD_FUNCTION
+#include <functional>
+#endif // USE_STD_FUNCTION
+
+
 namespace Yaksa{
 
 	namespace Api {
 
-	template<typename type> struct template_type {
-		using  type_t = type;
-	};
-	template<typename ClassType,
-		typename Type> struct TemplateType {
+#ifndef C99_LIKE_TYPE_DEFINE
+	#ifndef CXX_TYPE_DEFINE_MACRO
+	#define CXX_TYPE_DEFINE_MACRO
+	#endif// !CXX_TYPE_DEFINE_MACRO
+#else
+#ifndef CXX_TYPE_DEFINE_MACRO
+	#define CXX_TYPE_DEFINE_MACRO
+	#endif
+#endif // !C99_LIKE_DEFINE
 
-		using _ClassType = typename template_type<ClassType>::type_t;
-		using _ClassPtr = typename template_type<_ClassType*>::type_t;
-		using _Type = typename template_type<Type>::type_t;
-		using _TypePtr = typename template_type<Type*>::type_t;
+#ifndef WRAPPER_TEMPLATE_X1
+#define WRAPPER_TEMPLATE_X1(type, cxx, name, wrapper, var)\
+	type<cxx name, cxx wrapper = var>
+#endif // !WRAPPER_TEMPLATE_X1
 
-	};
+		template<typename type> struct template_type {
+			using  type_t = type;
+		};
+		template<typename ClassType,
+			typename Type> struct TemplateType {
 
+			using _ClassType = typename template_type<ClassType>::type_t;
+			using _ClassPtr = typename template_type<_ClassType*>::type_t;
+			using _Type = typename template_type<Type>::type_t;
+			using _TypePtr = typename template_type<Type*>::type_t;
+
+		};
 #ifndef _TYPE_TEMPLATE_
 #define _TYPE_TEMPLATE_(type_)\
-	template <typename WrapperType, typename Type = type_>
+	WRAPPER_TEMPLATE_X1(template, typename, WrapperType, Type, type_)
 #endif // !_TYPE_TEMPLATE_
 
 #ifndef _TYPE_DEFNE_MACRO_
@@ -74,23 +93,15 @@ namespace Yaksa{
 #endif // !YAKSA_DEFINE_TYPE
 
 #if defined(OS_WIN)
-	template <typename WrapperType, typename Type = HWND>
-	using ViewTypeDefine =
-		typename TemplateType<WrapperType, Type>::_Type;
+	_YAKSA_DEFINE_TYPE_(ViewTypeDefine, HWND)
 #else
-	template <typename WrapperType, typename Type = void*>
-	using ViewTypeDefine =
-		typename TemplateType<WrapperType, Type>::_Type;
+	_YAKSA_DEFINE_TYPE_(ViewTypeDefine, void*)
 #endif
 
 #if defined(OS_WIN)
-	template <typename WrapperType, typename Type = HMODULE>
-	using ModuleHandleDefine =
-		typename TemplateType<WrapperType, Type>::_Type;
+		_YAKSA_DEFINE_TYPE_(ModuleHandleDefine, HMODULE)
 #else
-	template <typename WrapperType, typename Type = void*>
-	using ModuleHandleType =
-		typename TemplateType<WrapperType, Type>::_Type;
+		_YAKSA_DEFINE_TYPE_(ModuleHandleDefine, void*)
 #endif
 
 	YAKSA_DEFINE_TYPE(WideStringTypeDefine, std::wstring, WCharTypeDefine, wchar_t, WCharTypePtrDefine, wchar_t*)
@@ -133,17 +144,18 @@ namespace Yaksa{
 		using TypeArg = typename std::remove_const<typename std::remove_reference<A>::type>::type;
 		using TypeR = R;
 	};
+#ifndef C99_LIKE_TYPE_DEFINE
 
-	using NativeView =
-		WrapperTypes<void>::_NativeViewType;
-	using NativeModuleHandle = 
-		WrapperTypes<void>::_NativeModuleHandle;
-	using String = 
-		WrapperTypes<void>::_CharStrType;
-	using WString = 
-		WrapperTypes<void>::_WCharStrType;
-	using type_char = 
-		WrapperTypes<void>::_CharType;
+	using NativeView = WrapperTypes<void>::_NativeViewType;
+	using NativeModuleHandle = WrapperTypes<void>::_NativeModuleHandle;
+	using String = WrapperTypes<void>::_CharStrType;
+	using WString = WrapperTypes<void>::_WCharStrType;
+	using type_char = WrapperTypes<void>::_CharType;
+
+#else
+
+#endif // !C99_LIKE_DEFINE
+
 
 #if defined(OS_WIN)
 #if defined(YAKSA_BUILD)
@@ -160,7 +172,7 @@ namespace Yaksa{
 //////////MACRO PIYOMA DEFINE//////////
 
 #ifndef _STRING_Const_Ptr_
-#define _STRING_Const_Ptr_(val)  val.c_str()
+#define _STRING_Const_Ptr_(var)  var.c_str()
 #endif
 
 //////////MACRO FIN//////////
@@ -303,43 +315,63 @@ type_char* data, int len, int msgid);
 	dataBind<type>(callback, callee)
 #endif // !YaksaCallback
 
-	/*
-		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒꧂
-          
-					
+	struct IFunction_OwnedObject
+	{
+	
+		virtual void* CloneToEmptyStorage(void* Storage) const = 0;
 
-			class Foo
-			{
-					public:
-					Foo() {}
-					~Foo(){}
-					void asnyc_work()
-					{
-						//////////Load and Call Module//////////
 
-						if( //////////Check ret var if true then Call Module's method//////////
+		virtual void* GetAddress() = 0;
 
-						component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
-						{
+		virtual void Destroy() = 0;
 
-							component.exec(value_param("FooObj"),
-							value_param("bar"), 0,
-							&Foo::Callee, this, 0);
+		virtual ~IFunction_OwnedObject() = default;
+	};
+	struct FFunctionStorage
+	{
+		FFunctionStorage()
+			: HeapAllocation(nullptr)
+		{
+		}
 
-						}
+		FFunctionStorage(FFunctionStorage&& Other)
+			: HeapAllocation(Other.HeapAllocation)
+		{
+			Other.HeapAllocation = nullptr;
+		}
 
-					}
-					void Callee(type_char* obj, type_char* cmd, type_char* data_type,
-							type_char* data, int len, int msgid)
-					{
-							//////////Do Some Asnyc Works//////////
-					}
+		FFunctionStorage(const FFunctionStorage& Other) = delete;
+		FFunctionStorage& operator=(FFunctionStorage&& Other) = delete;
+		FFunctionStorage& operator=(const FFunctionStorage& Other) = delete;
 
-					private:
-					SingleComponent<Foo>  component;
-			};
+		void* BindCopy(const FFunctionStorage& Other)
+		{
+			void* NewObj = Other.GetBoundObject()->CloneToEmptyStorage(this);
+			return NewObj;
+		}
 
-	*/
+		IFunction_OwnedObject* GetBoundObject() const
+		{
+			IFunction_OwnedObject* Result = (IFunction_OwnedObject*)HeapAllocation;
+
+			return Result;
+		}
+
+		void* GetPtr() const
+		{
+			return ((IFunction_OwnedObject*)HeapAllocation)->GetAddress();
+		}
+
+		void Unbind()
+		{
+			IFunction_OwnedObject* Owned = GetBoundObject();
+			Owned->Destroy();
+		}
+
+		void* HeapAllocation;
+
+	};
+
 	class dataObjEventHandler;
 
 	class dataRefBase
@@ -429,6 +461,12 @@ type_char* data, int len, int msgid);
 		typedef void (T::* Sig)(type_char* obj, type_char* cmd, type_char* data_type,
 			type_char* data, int len, int msgid);
 
+		 //Currently not use std::function
+
+#ifdef USE_STD_FUNCTION
+		typedef std::function<void(type_char* obj, type_char* cmd, type_char* data_type,
+			type_char* data, int len, int msgid)> stdSig;
+#endif
 
 		objEventHandlerImpl(P* obj, Sig sig) : obj_(obj), func_(sig) {};
 
@@ -469,6 +507,50 @@ type_char* data, int len, int msgid);
 	};
 	template<typename Obj> class SingleComponent{
 	public:
+
+			/*
+		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒꧂
+
+
+			////////////////////////////////////Usage: as follow////////////////////////////////////
+			class Foo
+			{
+					public:
+					Foo() {}
+					~Foo(){}
+					void asnyc_work()
+					{
+						//////////Load and Call Module//////////
+
+						if( //////////Check ret var if true then Call Module's method//////////
+
+						component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
+						{
+
+							component.exec(value_param("FooObj"),
+							value_param("bar"), 0,
+							&Foo::Callee, this, 0);
+
+						}
+
+					}
+					void Callee(type_char* obj, type_char* cmd, type_char* data_type,
+							type_char* data, int len, int msgid)
+					{
+							//////////Do Some Asnyc Works//////////
+					}
+
+					private:
+					SingleComponent<Foo>  component;
+			};
+
+	*/
+
+#ifdef USE_STD_FUNCTION
+		typedef std::function<void(type_char* obj, type_char* cmd, type_char* data_type,
+			type_char* data, int len, int msgid)> stdSig;
+#endif
+
 		typedef void (Obj::* Sig)(type_char* obj, type_char* cmd, type_char* data_type,
 			type_char* data, int len, int msgid);
 
@@ -531,7 +613,7 @@ type_char* data, int len, int msgid);
 		execPackageObjectFunc execPackageObj = nullptr;
 	};
 
-	}//dataConnectApi
+	}//Api
 
 }//Yaksa
 
