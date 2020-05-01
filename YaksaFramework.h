@@ -65,7 +65,7 @@
 
 */
 
-//#define OS_ANDROID 1 for debug test in Android Temporarily
+//#define OS_ANDROID 1 //for debug test in Android Temporarily
 
 #if defined(OS_WIN)
 #include <windows.h>
@@ -88,9 +88,11 @@ namespace Yaksa{
 
 	namespace Api {
 
+
 #ifndef C99_LIKE_TYPE_DEFINE
 	#ifndef CXX_TYPE_DEFINE_MACRO
-	#define CXX_TYPE_DEFINE_MACRO
+	#define CXX_TYPE_DEFINE_MACRO(name, type, use, cxx, \
+		class_type, type_var, wrapper)
 	#endif// !CXX_TYPE_DEFINE_MACRO
 #else
 #ifndef CXX_TYPE_DEFINE_MACRO
@@ -104,31 +106,21 @@ namespace Yaksa{
 #endif // !WRAPPER_TEMPLATE_X1
 
 #ifndef WRAPPER_TEMPLATE_X2
-#define WRAPPER_TEMPLATE_X2(type, cxx, name, wrapper, var, use, type_)\
-	type<cxx name, cxx wrapper = var> use type_ = cxx TemplateType<WrapperType, Type>::_Type;
+#define WRAPPER_TEMPLATE_X2(type, cxx, name, wrapper, var, \
+		use, type_, class_type, type_var, wrapper_)\
+	type<cxx name, cxx wrapper = var> \
+		use type_ = cxx class_type<wrapper_, Type>::type_var;
 #endif // !WRAPPER_TEMPLATE_X2
-		template<typename type> struct template_type {
-			using  type_t = type;
-		};
-		template<typename ClassType,
-			typename Type> struct TemplateType {
 
-			using _ClassType = typename template_type<ClassType>::type_t;
-			using _ClassPtr = typename template_type<_ClassType*>::type_t;
-			using _Type = typename template_type<Type>::type_t;
-			using _TypePtr = typename template_type<Type*>::type_t;
-
-		};
 #ifndef _TYPE_TEMPLATE_
 #define _TYPE_TEMPLATE_(type_)\
 	WRAPPER_TEMPLATE_X1(template, typename, WrapperType, Type, type_)
 #endif // !_TYPE_TEMPLATE_
 
 #ifndef _TYPE_DEFNE_MACRO_
-#define _TYPE_DEFNE_MACRO_(TYPE)\
-	using TYPE = typename TemplateType<WrapperType, Type>::_Type;
+#define _TYPE_DEFNE_MACRO_(TYPE, use, class_type, cxx, type_var)\
+	use TYPE = cxx class_type<WrapperType, Type>::type_var;
 #endif // !_TYPE_DEFNE_MACRO_
-
 /*
 		in clang++ ocurred error: 
 		pasting formed 'cxx', an invalid preprocessing token
@@ -136,13 +128,15 @@ namespace Yaksa{
 #if defined(OS_WIN)
 #ifndef _YAKSA_DEFINE_TYPE_ 
 #define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
-	_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE)
+	_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE, \
+		using, TemplateType, typename, _Type)
 #endif // !_YAKSA_DEFINE_TYPE_
 #else 
 #if defined(OS_ANDROID)
 #ifndef _YAKSA_DEFINE_TYPE_ 
 #define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
-	WRAPPER_TEMPLATE_X2(template, typename, WrapperType, Type, type_, using, TYPE)
+	WRAPPER_TEMPLATE_X2(template, typename, WrapperType, Type, type_, \
+		using, TYPE, TemplateType, _Type, WrapperType)
 #endif // !_YAKSA_DEFINE_TYPE_
 #endif
 #endif 
@@ -154,6 +148,18 @@ namespace Yaksa{
 
 #endif // !YAKSA_DEFINE_TYPE
 
+
+	template<typename type> struct template_type {
+		using  type_t = type;
+	};
+	template<typename ClassType, typename Type> struct TemplateType {
+
+		using _ClassType = typename template_type<ClassType>::type_t;
+		using _ClassPtr = typename template_type<_ClassType*>::type_t;
+		using _Type = typename template_type<Type>::type_t;
+		using _TypePtr = typename template_type<Type*>::type_t;
+
+	};
 #if defined(OS_WIN)
 	_YAKSA_DEFINE_TYPE_(ViewTypeDefine, HWND)
 #else
@@ -169,23 +175,18 @@ namespace Yaksa{
 	YAKSA_DEFINE_TYPE(WideStringTypeDefine, std::wstring, WCharTypeDefine, wchar_t, WCharTypePtrDefine, wchar_t*)
 	YAKSA_DEFINE_TYPE(StringTypeDefine, std::string, CharTypeDefine, char, CharTypePtrDefine, char*)
 
-/*         
-		For the purpose of Neat and Order
-        Finally Register All defined basic types in WrapperType
-*/
 
 	template <typename Type,
 		typename WrapperType =
 		TemplateType<Type, void>,
-		//define NativeView
+/*
+		For the purpose of Neat and Order
+		Finally Register All defined basic types in WrapperType
+*/
 		typename NativeViewType = ViewTypeDefine<Type>,
-		//define NativeHandle
 		typename NativeModuleHandle = ModuleHandleDefine<Type>,
-		//define wchar_t
 		typename WCharStrType = WideStringTypeDefine<Type>,
-		//define std::string
 		typename CharStrType = StringTypeDefine<Type>,
-		//define char
 		typename CharType = CharTypeDefine<Type> > struct WrapperTypes {
 
 		using _Myt = WrapperType;
@@ -236,8 +237,6 @@ namespace Yaksa{
 			void* callback, void* obj_invoke, int msgid);
 #endif
 #endif //OS_WIN
-
-//////////MACRO PIYOMA DEFINE//////////
 
 #ifndef _STRING_Const_Ptr_
 #define _STRING_Const_Ptr_(var)  var.c_str()
@@ -388,7 +387,6 @@ type_char* data, int len, int msgid);
 	
 		virtual void* CloneToEmptyStorage(void* Storage) const = 0;
 
-
 		virtual void* GetAddress() = 0;
 
 		virtual void Destroy() = 0;
@@ -453,7 +451,7 @@ type_char* data, int len, int msgid);
 
 		virtual void add_ref() const
 		{
-			++ref_count_;
+			++ref_count_; 
 		}
 
 		virtual bool release() const
@@ -575,13 +573,6 @@ type_char* data, int len, int msgid);
 	};
 	template<typename Obj> class SingleComponent{
 	public:
-
-			/*
-	
-			////////////////////////////////////Usage: as follow////////////////////////////////////
-			
-
-	*/
 
 #ifdef USE_STD_FUNCTION
 		typedef std::function<void(type_char* obj, type_char* cmd, type_char* data_type,
