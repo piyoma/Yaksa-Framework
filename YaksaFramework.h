@@ -7,22 +7,18 @@
 #ifndef __yaksa_framework_h___
 #define __yaksa_framework_h___
 
-////--꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
-////           
-////          ꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂          
-////
-////                  A cross-platform GUI Framework Wrapped Chromium that Can embedded All Systems and Platforms.
-////                  eg. Windows, linux, macOS, Android, iOS, Unity, UnrealEngine4, Qt, and etc.
-////                  2020/04/29 piyoma
-////                  break;
-////                  ༺GitHub https://github.com/piyoma/YaksaFramework༻    
-////       
-////                                           
-////--꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
+/*꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
+           
+          ꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂          
 
-/*
+                  A cross-platform GUI Framework Wrapped Chromium that Can embedded All Systems and Platforms.
+                  eg. Windows, linux, macOS, Android, iOS, Unity, UnrealEngine4, Qt, and etc.
+                  2020/04/29 piyoma
+                 break;
+                 ༺GitHub https://github.com/piyoma/YaksaFramework༻    
+     
 
-		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂
+			////////////////////////////////////////////////༺TONOSHIKI PIYOMA////////////////////////////////////////////////
 
 
 			This Header File implements cross-platform Component  design( call and callback), completely abstract,
