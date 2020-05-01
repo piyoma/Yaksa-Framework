@@ -20,6 +20,19 @@
 ////                                           
 ////--꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
 
+/*
+
+		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂
+
+
+		This Header File implements cross-platform Component  design( call and callback), completely abstract,
+		blocking the coupling between modules.
+		2020/05/01 piyoma
+
+
+*/
+
+//#define OS_ANDROID 1 for debug test in Android Temporarily
 
 #if defined(OS_WIN)
 #include <windows.h>
@@ -57,6 +70,10 @@ namespace Yaksa{
 	type<cxx name, cxx wrapper = var>
 #endif // !WRAPPER_TEMPLATE_X1
 
+#ifndef WRAPPER_TEMPLATE_X2
+#define WRAPPER_TEMPLATE_X2(type, cxx, name, wrapper, var, use, type_)\
+	type<cxx name, cxx wrapper = var> use type_ = cxx TemplateType<WrapperType, Type>::_Type;
+#endif // !WRAPPER_TEMPLATE_X2
 		template<typename type> struct template_type {
 			using  type_t = type;
 		};
@@ -79,11 +96,24 @@ namespace Yaksa{
 	using TYPE = typename TemplateType<WrapperType, Type>::_Type;
 #endif // !_TYPE_DEFNE_MACRO_
 
-#ifndef _YAKSA_DEFINE_TYPE_
+/*
+		in clang++ ocurred error: 
+		pasting formed 'cxx', an invalid preprocessing token
+*/
+#if defined(OS_WIN)
+#ifndef _YAKSA_DEFINE_TYPE_ 
 #define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
 	_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE)
 #endif // !_YAKSA_DEFINE_TYPE_
-
+#else 
+#if defined(OS_ANDROID)
+#ifndef _YAKSA_DEFINE_TYPE_ 
+#define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
+	WRAPPER_TEMPLATE_X2(template, typename, WrapperType, Type, type_, using, TYPE)
+	//_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE)
+#endif // !_YAKSA_DEFINE_TYPE_
+#endif
+#endif 
 #ifndef YAKSA_DEFINE_TYPE
 #define YAKSA_DEFINE_TYPE(NAME, obj, type_def, type, ptr_def, ptr);\
 				_YAKSA_DEFINE_TYPE_(NAME, obj) \
@@ -153,6 +183,12 @@ namespace Yaksa{
 	using type_char = WrapperTypes<void>::_CharType;
 
 #else
+
+	typedef WrapperTypes<void>::_NativeViewType NativeView;
+	typedef WrapperTypes<void>::_NativeModuleHandle NativeModuleHandle;
+	typedef WrapperTypes<void>::_CharStrType String;
+	typedef WrapperTypes<void>::_WCharStrType WString;
+	typedef WrapperTypes<void>::_CharType type_char;
 
 #endif // !C99_LIKE_DEFINE
 
@@ -479,8 +515,8 @@ type_char* data, int len, int msgid);
 		};
 
 	private:
-		Sig func_;
 		T*  obj_;
+		Sig func_;
 	};
 
 	template <typename P, typename T = P>
@@ -581,6 +617,7 @@ type_char* data, int len, int msgid);
 #else
 		bool Load(type_char* path, type_char*module_name) {
 
+#if defined(OS_LINUX)
 			NativeModuleHandle module
 				= nullptr;
 			type_str dllPath = path;
@@ -598,6 +635,10 @@ type_char* data, int len, int msgid);
 				return true;
 			}
 			return false;
+#else
+			return false;
+#endif
+		
 		}
 #endif
 		
