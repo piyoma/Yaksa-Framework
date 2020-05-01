@@ -614,6 +614,7 @@ type_char* data, int len, int msgid);
 		bool Load(type_char* path, type_char*module_name) {
 
 #if defined(OS_LINUX)
+
 			NativeModuleHandle module
 				= nullptr;
 			type_str dllPath = path;
