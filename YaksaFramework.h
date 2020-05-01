@@ -143,7 +143,6 @@ namespace Yaksa{
 #ifndef _YAKSA_DEFINE_TYPE_ 
 #define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
 	WRAPPER_TEMPLATE_X2(template, typename, WrapperType, Type, type_, using, TYPE)
-	//_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE)
 #endif // !_YAKSA_DEFINE_TYPE_
 #endif
 #endif 
