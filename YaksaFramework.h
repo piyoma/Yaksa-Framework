@@ -32,30 +32,30 @@
 
 			class Foo
 			{
-					public:
-					Foo() {}
-					~Foo(){}
-					void asnyc_work()
-					{
+				public:
+				Foo() {}
+				~Foo(){}
+				void asnyc_work()
+				{
 					
-						if( component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
-						{
-
-							component.exec(value_param("FooObj"),
-							value_param("bar"), 0,
-							&Foo::Callee, this, 0);
-
-						}
-
-					}
-					void Callee(type_char* obj, type_char* cmd, type_char* data_type,
-							type_char* data, int len, int msgid)
+					if( component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
 					{
-							//////////Do Some Asnyc Works//////////
+
+						component.exec(value_param("FooObj"),
+						value_param("bar"), 0,
+						&Foo::Callee, this, 0);
+
 					}
 
-					private:
-					SingleComponent<Foo>  component;
+				}
+				void Callee(type_char* obj, type_char* cmd, type_char* data_type,
+						type_char* data, int len, int msgid)
+				{
+						//////////Do Some Asnyc Works//////////
+				}
+
+				private:
+				SingleComponent<Foo>  component;
 			};
 
 		
@@ -649,7 +649,7 @@ type_char* data, int len, int msgid);
 		{
 			if (execPackageObj) {
 
-					execPackageObj(obj, cmd, arg, YaksaCallee(Obj, callback, caller), 0, msgid);
+				execPackageObj(obj, cmd, arg, YaksaCallee(Obj, callback, caller), 0, msgid);
 			}
 		}
 	private:
