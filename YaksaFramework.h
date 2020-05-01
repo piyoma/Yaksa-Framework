@@ -30,7 +30,7 @@
 
 			Foo foo;
 			foo.Initialize();
-			foo.asnyc_work();
+			foo.asnyc_work(); // call a obj method like Yaksa.Module.Bar  or Yaksa.Module.Foo
 
 			//At First should define a class like this
 
