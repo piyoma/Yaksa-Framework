@@ -37,23 +37,6 @@ namespace Yaksa{
 
 	namespace Api {
 
-#if defined(_M_IX86) || defined (_M_AMD64)
-
-#pragma pack(push,4)
-
-	template<typename type> struct struct_type {
-		using  type_t = type;
-	};
-	template <typename WrapperType = void*>
-		using voidType =
-			typename struct_type<WrapperType>::type_t;
-
-#pragma pack(pop)
-
-#else
-	//NOIMPLEMENT
-#endif  // _M_IX86 || _M_AMD64
-
 	template<typename type> struct template_type {
 		using  type_t = type;
 	};
@@ -61,11 +44,35 @@ namespace Yaksa{
 		typename Type> struct TemplateType {
 
 		using _ClassType = typename template_type<ClassType>::type_t;
-		using _ClassPtr = typename template_type<_ClassType *>::type_t;
+		using _ClassPtr = typename template_type<_ClassType*>::type_t;
 		using _Type = typename template_type<Type>::type_t;
 		using _TypePtr = typename template_type<Type*>::type_t;
 
 	};
+
+#ifndef _TYPE_TEMPLATE_
+#define _TYPE_TEMPLATE_(type_)\
+	template <typename WrapperType, typename Type = type_>
+#endif // !_TYPE_TEMPLATE_
+
+#ifndef _TYPE_DEFNE_MACRO_
+#define _TYPE_DEFNE_MACRO_(TYPE)\
+	using TYPE = typename TemplateType<WrapperType, Type>::_Type;
+#endif // !_TYPE_DEFNE_MACRO_
+
+#ifndef _YAKSA_DEFINE_TYPE_
+#define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
+	_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE)
+#endif // !_YAKSA_DEFINE_TYPE_
+
+#ifndef YAKSA_DEFINE_TYPE
+#define YAKSA_DEFINE_TYPE(NAME, obj, type_def, type, ptr_def, ptr);\
+				_YAKSA_DEFINE_TYPE_(NAME, obj) \
+				_YAKSA_DEFINE_TYPE_(type_def, type) \
+				_YAKSA_DEFINE_TYPE_(ptr_def, ptr) 
+
+#endif // !YAKSA_DEFINE_TYPE
+
 #if defined(OS_WIN)
 	template <typename WrapperType, typename Type = HWND>
 	using ViewTypeDefine =
@@ -86,52 +93,34 @@ namespace Yaksa{
 		typename TemplateType<WrapperType, Type>::_Type;
 #endif
 
-#ifndef YAKSA_DEFINE_TYPE
+	YAKSA_DEFINE_TYPE(WideStringTypeDefine, std::wstring, WCharTypeDefine, wchar_t, WCharTypePtrDefine, wchar_t*)
+	YAKSA_DEFINE_TYPE(StringTypeDefine, std::string, CharTypeDefine, char, CharTypePtrDefine, char*)
 
-//-------------------------꧁༒༒༒DEFINE TYPES༻༒༒༒-------------------------꧂
-
-#define YAKSA_DEFINE_TYPE(NAME, obj, type_def, type, ptr_det, ptr);\
-				template <typename WrapperType, typename Type = obj>\
-						using NAME = typename TemplateType<WrapperType, Type>::_Type;\
-				template <typename WrapperType, typename Type = type>\
-						using type_def = typename TemplateType<WrapperType, Type>::_Type;\
-				template <typename WrapperType, typename Type = sub>\
-						using ptr_det = typename TemplateType<WrapperType, Type>::_Type*;
-
-#endif // !YAKSA_DEFINE_TYPE
-
-	YAKSA_DEFINE_TYPE(WideStringTypeDefine, 
-		std::wstring, WCharTypeDefine, 
-		wchar_t, WCharTypePtrDefine, wchar_t*)
-	YAKSA_DEFINE_TYPE(StringTypeDefine, 
-		std::string, CharTypeDefine, 
-		char, CharTypePtrDefine, char*)
+/*         
+		For the purpose of Neat and Order
+        Finally Register All defined basic types in WrapperType
+*/
 
 	template <typename Type,
 		typename WrapperType =
 		TemplateType<Type, void>,
 		//define NativeView
 		typename NativeViewType = ViewTypeDefine<Type>,
-		typename NativeViewType_ = NativeViewType,
 		//define NativeHandle
 		typename NativeModuleHandle = ModuleHandleDefine<Type>,
-		typename NativeModuleHandle_ = NativeModuleHandle,
 		//define wchar_t
 		typename WCharStrType = WideStringTypeDefine<Type>,
-		typename WCharStrType_ = WCharStrType,
 		//define std::string
 		typename CharStrType = StringTypeDefine<Type>,
-		typename CharStrType_  = CharStrType,
 		//define char
-		typename CharType = CharTypeDefine<Type>,
-		typename CharType_ = CharType> struct WrapperTypes {
+		typename CharType = CharTypeDefine<Type> > struct WrapperTypes {
 
 		using _Myt = WrapperType;
 		using _NativeViewType = NativeViewType;
-		using _NativeModuleHandle = NativeModuleHandle_;
-		using _CharStrType = CharStrType_;
-		using _WCharStrType = WCharStrType_;
-		using _CharType = CharType_;
+		using _NativeModuleHandle = NativeModuleHandle;
+		using _CharStrType = CharStrType;
+		using _WCharStrType = WCharStrType;
+		using _CharType = CharType;
 	};
 	template<typename L>
 	struct TypeLambdaTraits : TypeLambdaTraits<decltype(&L::operator())> {};
@@ -149,9 +138,9 @@ namespace Yaksa{
 		WrapperTypes<void>::_NativeViewType;
 	using NativeModuleHandle = 
 		WrapperTypes<void>::_NativeModuleHandle;
-	using type_str = 
+	using String = 
 		WrapperTypes<void>::_CharStrType;
-	using type_wstr = 
+	using WString = 
 		WrapperTypes<void>::_WCharStrType;
 	using type_char = 
 		WrapperTypes<void>::_CharType;
@@ -326,14 +315,18 @@ type_char* data, int len, int msgid);
 					~Foo(){}
 					void asnyc_work()
 					{
-						//////////Load and CallModule//////////
+						//////////Load and Call Module//////////
 
-						component.Load(L"LocalPath", L"Yaksa.Module.Bar");
+						if( //////////Check ret var if true then Call Module's method//////////
 
-						component.exec(value_param("FooObj"), 
-						value_param("bar"), 0,
-						&Foo::Callee, this, 0);
-	
+						component.Load(L"LocalPath", L"Yaksa.Module.Bar")  )
+						{
+
+							component.exec(value_param("FooObj"),
+							value_param("bar"), 0,
+							&Foo::Callee, this, 0);
+
+						}
 
 					}
 					void Callee(type_char* obj, type_char* cmd, type_char* data_type,
@@ -483,11 +476,11 @@ type_char* data, int len, int msgid);
 		~SingleComponent() {};
 
 #if defined(OS_WIN)
-		bool Load(type_wstr path, type_wstr module_name){
+		bool Load(WString path, WString module_name){
 
 			NativeModuleHandle module
 				= nullptr;
-			type_wstr dllPath =
+			WString dllPath =
 				path + module_name; 
 			dllPath += L".dll";
 			module = LoadLibraryW(
@@ -537,9 +530,6 @@ type_char* data, int len, int msgid);
 	private:
 		execPackageObjectFunc execPackageObj = nullptr;
 	};
-
-
-
 
 	}//dataConnectApi
 
