@@ -31,7 +31,7 @@
 
 		//At First should define a class like this
 		//By the way, Yaksa Framework Unique Interface is Opensource code,  
-		//Can Add/Extend  unlimited  C/C++ ComponentsExtensions Private pr Public
+		//Can Add/Extend  unlimited  C/C++ ComponentsExtensions Private or Public
 
 		class Foo
 		{
