@@ -30,6 +30,8 @@
 		foo.asnyc_work(); // call a obj method like Yaksa.Module.Bar  or Yaksa.Module.Foo
 
 		//At First should define a class like this
+		//By the way, Yaksa Framework Unique Interface is Opensource code,  
+		//Can Add/Extend  unlimited  C/C++ ComponentsExtensions Private pr Public
 
 		class Foo
 		{
