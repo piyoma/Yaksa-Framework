@@ -132,6 +132,10 @@ namespace Yaksa{
 /*
 		//////////////////༺CODE DESCRIPTION༻//////////////////
 
+		#define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
+	_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE, \
+		using, TemplateType, typename, _Type)
+
 		In Clang++ ocurred error: 
 		" pasting formed 'cxx', an invalid preprocessing token "
 		so Need special treatment
@@ -140,8 +144,8 @@ namespace Yaksa{
 #if defined(OS_WIN)
 #ifndef _YAKSA_DEFINE_TYPE_ 
 #define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
-	_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE, \
-		using, TemplateType, typename, _Type)
+	WRAPPER_TEMPLATE_X2(template, typename, WrapperType, Type, type_, \
+		using, TYPE, TemplateType, _Type, WrapperType)
 #endif // !_YAKSA_DEFINE_TYPE_
 #else 
 #if defined(OS_ANDROID)
