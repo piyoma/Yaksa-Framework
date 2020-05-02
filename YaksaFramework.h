@@ -21,13 +21,15 @@
 		////////////////////////////////////////////////༺TONOSHIKI PIYOMA////////////////////////////////////////////////
 
 
-		This Header File implements cross-platform Component  design( call and sync-async callback), 
+		This Header File implements Cross-platform Component  Design( -- call and sync-async callback -- ), 
 		completely abstract,blocking the coupling between modules. 
 		you can call a object simplely In any Operating Systems and Platforms, as follows:
 
 		Foo foo;
 		foo.Initialize();
 		foo.asnyc_work(); // call a obj method like Yaksa.Module.Bar  or Yaksa.Module.Foo
+
+		//Support Dynamic Load & Unload Components
 
 		//At First should define a class like this
 		//By the way, Yaksa Framework Unique Interface is Opensource code,  
