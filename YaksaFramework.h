@@ -20,7 +20,7 @@
 
 		About Yaksa-Framework.h Unique Interface Define.
 
-		///////////////////////////////////////༺TONOSHIKI PIYOMA///////////////////////////////////////
+		///////////////////////////////////////༺TONOSHIKI PIYOMA༻///////////////////////////////////////
 
 
 		This Header File implements Cross-platform Component  Design( -- call and sync-async callback -- ), 
@@ -128,10 +128,14 @@ namespace Yaksa{
 #define _TYPE_DEFNE_MACRO_(TYPE, use, class_type, cxx, type_var)\
 	use TYPE = cxx class_type<WrapperType, Type>::type_var;
 #endif // !_TYPE_DEFNE_MACRO_
+
 /*
+		//////////////////༺CODE DESCRIPTION༻//////////////////
+
 		In Clang++ ocurred error: 
 		" pasting formed 'cxx', an invalid preprocessing token "
 		so Need special treatment
+
 */
 #if defined(OS_WIN)
 #ifndef _YAKSA_DEFINE_TYPE_ 
@@ -188,6 +192,8 @@ namespace Yaksa{
 		typename WrapperType =
 		TemplateType<Type, void>,
 /*
+		//////////////////༺CODE DESCRIPTION༻//////////////////
+
 		For the purpose of Neat and Order
 		Finally Register All defined basic types in WrapperType
 		If you do n’t like this way,
