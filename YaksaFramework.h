@@ -18,7 +18,9 @@
                 ༺GitHub https://github.com/piyoma/YaksaFramework༻    
      
 
-		////////////////////////////////////////////////༺TONOSHIKI PIYOMA////////////////////////////////////////////////
+		About Yaksa-Framework.h Unique Interface Define.
+
+		///////////////////////////////////////༺TONOSHIKI PIYOMA///////////////////////////////////////
 
 
 		This Header File implements Cross-platform Component  Design( -- call and sync-async callback -- ), 
