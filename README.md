@@ -9,8 +9,14 @@
                 2020/04/29 piyoma
                 break;
                 ༺GitHub https://github.com/piyoma/YaksaFramework༻    
-     
-
+		
+		
+		
+		
+		
+     			
+		About Yaksa-Framework.h Unique Interface Define.
+		
 		///////////////////////////////////////༺TONOSHIKI PIYOMA///////////////////////////////////////
 
 
