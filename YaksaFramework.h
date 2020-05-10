@@ -11,6 +11,9 @@
            
           ꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂          
 
+				✞IN HOC SIGNO VINCES✞
+				Kyrie eleison, In nómine Patris, et Fílii, et Spíritus Sancti. 
+
                 A cross-platform GUI Framework Wrapped Chromium that Can embedded All Systems and Platforms.
                 eg. Windows, linux, macOS, Android, iOS, Unity, UnrealEngine4, Qt, and etc.
                 2020/04/29 piyoma
@@ -281,6 +284,11 @@ namespace Yaksa{
 	{
 		return reinterpret_cast<type>(const_cast<char*>(v));
 	}
+	template <typename const_type = const void*>
+	inline type_char * cast_type(void* v)
+	{
+		return reinterpret_cast<type_char*>(v);
+	}
 #ifndef value_param
 
 #define  value_param(v) cast_type<>(v)
@@ -382,8 +390,8 @@ type_char* data, int len, int msgid);
 	dataPackageExec(YaksaCall, obj, cmd, arg, nullptr, handler, -1, nullptr, -1)
 #endif 
 
-#ifndef DispatchEvent
-#define DispatchEvent(obj, event_name, arg)\
+#ifndef YaksaDispatchEvent
+#define YaksaDispatchEvent(obj, event_name, arg)\
 	dataPackageExec(YaksaCall, obj, event_name, arg, nullptr, nullptr, -1, nullptr, -1)
 #endif 
 
@@ -471,7 +479,7 @@ type_char* data, int len, int msgid);
 
 		virtual void add_ref() const
 		{
-			++ref_count_; 
+			++ref_count_; //maybe unsafe
 		}
 
 		virtual bool release() const
@@ -519,7 +527,9 @@ type_char* data, int len, int msgid);
 
 		dataObj() {}
 		~dataObj() {}
-		virtual void AddEventHandler(dataObjEventHandler* handler) {}
+		virtual void exec(void* obj, void* cmd, void* arg,
+			void* callback, void* obj_invoke, int msgid) {};
+		virtual void addCallee(type_char* id, dataObjEventHandler* handler) {}
 		virtual const char* obj_id() { return ""; }
 
 	};
@@ -561,7 +571,7 @@ type_char* data, int len, int msgid);
 		{
 			(obj_->*func_)(obj, cmd, data_type, data, len, msgid);
 
-			Release();
+			//Release();
 		};
 
 	private:
