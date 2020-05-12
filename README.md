@@ -1,24 +1,30 @@
 # Yaksa Framework
 
+﻿
+// Copyright (c) 2020 The YaksaFramework Authors piyoma. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+
+#ifndef __yaksa_framework_h___
+#define __yaksa_framework_h___
+
 /*꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
            
           ꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂          
 
-
+                ✞IN HOC SIGNO VINCES✞
+                Kyrie eleison, In nómine Patris, et Fílii, et Spíritus Sancti.
 
                 A cross-platform GUI Framework Wrapped Chromium that Can embedded All Systems and Platforms.
                 eg. Windows, linux, macOS, Android, iOS, Unity, UnrealEngine4, Qt, and etc.
                 2020/04/29 piyoma
                 break;
                 ༺GitHub https://github.com/piyoma/YaksaFramework༻    
-		
-		
-		
-		
-		
-     			
+     
+
 		About Yaksa-Framework.h Unique Interface Define.
-		
+
 		///////////////////////////////////////༺TONOSHIKI PIYOMA༻///////////////////////////////////////
 
 
@@ -70,3 +76,4 @@
 
 
 */
+#endif
