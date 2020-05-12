@@ -35,7 +35,7 @@
 		foo.Initialize();
 		foo.asnyc_work(); // call a obj method like Yaksa.Module.Bar  or Yaksa.Module.Foo
 
-		//Support Dynamic Load & Unload Components & Dynamic Derive & Unerive
+		//Support Dynamic Load & Unload Components & Dynamic Derive & Underive
 
 		//At First should define a class like this
 		//By the way, Yaksa Framework Unique Interface is Opensource code,  
