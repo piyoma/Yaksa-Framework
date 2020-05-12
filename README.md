@@ -1,13 +1,7 @@
 # Yaksa Framework
 
 ﻿
-// Copyright (c) 2020 The YaksaFramework Authors piyoma. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 
-
-#ifndef __yaksa_framework_h___
-#define __yaksa_framework_h___
 
 /*꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
            
