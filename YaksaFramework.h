@@ -26,9 +26,9 @@
 		///////////////////////////////////////༺TONOSHIKI PIYOMA༻///////////////////////////////////////
 
 
-		This Header File implements Cross-platform Component  Design( -- call and sync-async callback -- ), 
+		This Header File implements Cross-platform Component  Design( -- call and sync-async callback and The basic work of dynamic derive-- ), 
 		completely abstract,blocking the coupling between modules. 
-		you can call a object simplely In any Operating Systems and Platforms, as follows:
+		you can call a object or jumbo components simplely In any Operating Systems and Platforms[and that's a little part of our Works] , as follows:
 
 		Foo foo;
 		foo.Initialize();
