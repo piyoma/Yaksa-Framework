@@ -7,7 +7,8 @@
 #ifndef __yaksa_framework_h___
 #define __yaksa_framework_h___
 
-/*꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
+/*
+	꧁༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༺TONOSHIKI PIYOMA༻༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒༒꧂
            
           ꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼☽☪☭----✞----☭☪☽☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂          
 
@@ -23,7 +24,7 @@
 
 		About Yaksa-Framework.h Unique Interface Define.
 
-		///////////////////////////////////////༺TONOSHIKI PIYOMA༻///////////////////////////////////////
+		꧁༒༒༒༒༒༒༒༒༒༒༒༒༺☼༺TONOSHIKI PIYOMA༻☼༻༒༒༒༒༒༒༒༒༒༒༒༒꧂       
 
 
 		This Header File implements Cross-platform Component Design( -- call and sync-async callback and 
@@ -270,7 +271,7 @@ namespace Yaksa{
 
 	typedef int(*InitPackageModule)(void* callback);
 
-	typedef  int(*execPackageObjectFunc)(void* obj, void* cmd, void* arg,
+	typedef  int(*execPackageObjectFunc)(void* obj, void* cmd, void* arg, int len,
 		void* callback, void* obj_invoke, int msgid);
 
 	typedef int(*onPackageCallback) (type_char* obj, type_char* cmd, type_char* data_type,
@@ -528,7 +529,7 @@ type_char* data, int len, int msgid);
 
 		dataObj() {}
 		~dataObj() {}
-		virtual void exec(void* obj, void* cmd, void* arg,
+		virtual void exec(void* obj, void* cmd, void* arg, int len,
 			void* callback, void* obj_invoke, int msgid) {};
 		virtual void addCallee(type_char* id, dataObjEventHandler* handler) {}
 		virtual const char* obj_id() { return ""; }
@@ -619,6 +620,11 @@ type_char* data, int len, int msgid);
 #if defined(OS_WIN)
 		bool Load(WString path, WString module_name){
 
+			if (execPackageObj)
+			{
+				return true;
+			}
+
 			NativeModuleHandle module
 				= nullptr;
 			WString dllPath =
@@ -666,12 +672,12 @@ type_char* data, int len, int msgid);
 		}
 #endif
 		
-		void exec(void* obj, void* cmd, void* arg,
+		void exec(void* obj, void* cmd, void* arg, int len, 
 			Sig callback, Obj* caller, int msgid)
 		{
 			if (execPackageObj) {
 
-				execPackageObj(obj, cmd, arg, YaksaCallee(Obj, callback, caller), 0, msgid);
+				execPackageObj(obj, cmd, arg, len, callback ? YaksaCallee(Obj, callback, caller) : 0, 0, msgid);
 			}
 		}
 	private:
