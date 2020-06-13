@@ -24,8 +24,7 @@
 
 
 		This Header File implements a Cross-platform Component Design( -- call and sync-async callback- 
-		Large-scale object management -- ), 
-		completely abstract,blocking the coupling between modules. 
+		Large-scale object management -- ), completely abstract, blocking the coupling between modules. 
 		you can call a object simplely In any Operating Systems and Platforms, as follows:
 
 		Foo foo;
