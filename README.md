@@ -11,7 +11,7 @@
                 ✞IN HOC SIGNO VINCES✞
                 Kyrie eleison, In nómine Patris, et Fílii, et Spíritus Sancti.
 
-                A cross-platform GUI Framework Wrapped Chromium that Can embedded All Systems and Platforms.
+                A cross-platform GUI Framework Wrapped Chromium that Can be embedded in All Systems and Platforms.
                 eg. Windows, linux, macOS, Android, iOS, Unity, UnrealEngine4, Qt, and etc.
                 2020/04/29 piyoma
                 break;
@@ -23,8 +23,8 @@
 		///////////////////////////////////////༺TONOSHIKI PIYOMA༻///////////////////////////////////////
 
 
-		This Header File implements Cross-platform Component  Design( -- call and sync-async callback -- ), 
-		completely abstract,blocking the coupling between modules. 
+		This Header File implements a Cross-platform Component Design( -- call and sync-async callback- 
+		Large-scale object management -- ), completely abstract, blocking the coupling between modules. 
 		you can call a object simplely In any Operating Systems and Platforms, as follows:
 
 		Foo foo;
