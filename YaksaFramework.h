@@ -135,7 +135,7 @@ namespace Yaksa{
 #endif // !_TYPE_DEFNE_MACRO_
 
 /*
-		//////////////////༺CODE DESCRIPTION༻//////////////////
+		༺☼☽☪☭----༺CODE DESCRIPTION༻----☭☪☽☼༻
 
 		#define _YAKSA_DEFINE_TYPE_(TYPE, type_)\
 	_TYPE_TEMPLATE_(type_)## _TYPE_DEFNE_MACRO_(TYPE, \
@@ -169,6 +169,68 @@ namespace Yaksa{
 
 #endif // !YAKSA_DEFINE_TYPE
 
+#ifndef T_WHISPER_GLEEMAN
+#define T_WHISPER_GLEEMAN(Statement) static const wchar_t *  Statement[]
+#endif // !T_WHISPER_GLEEMAN
+
+#ifndef T_CXX_DEF_CTOR
+#define T_CXX_DEF_CTOR(name) 	name\
+		::name() {\
+		}
+#endif // !T_CXX_DEF_CTOR
+
+#ifndef T_CXX_DEF_DTOR
+#define T_CXX_DEF_DTOR(name) 	name\
+		::~name() {\
+		}
+#endif // !T_CXX_DEF_DTOR
+
+#ifndef T_CXX_DEF_SUB_CTOR
+#define T_CXX_DEF_SUB_CTOR(up, name) 	up::name\
+		::name() {\
+		}
+#endif // !T_CXX_DEF_SUB_CTOR
+
+#ifndef T_CXX_DEF_SUB_DTOR
+#define T_CXX_DEF_SUB_DTOR(up, name) 	up::name\
+		::~name() {\
+		}
+#endif // !T_CXX_DEF_SUB_DTOR
+
+#ifndef YAKSA_REF
+#define YAKSA_REF(space, interface_)\
+namespace space {\
+	class interface_;\
+}
+#endif // !YAKSA_REF
+
+#ifndef YAKSA_REF_
+#define YAKSA_REF_(interface_)\
+	class interface_;
+#endif // !YAKSA_REF_
+
+#ifndef YAKSA_REF_TYPE
+#define YAKSA_REF_TYPE(space, interface_, type_)\
+namespace space {\
+	type_ interface_;\
+}
+#endif // !YAKSA_REF
+
+#ifndef YAKSA_REF_TEMPLATE
+#define YAKSA_REF_TEMPLATE(space, interface_, type_)\
+namespace space {\
+	template <typename T> type_ interface_;\
+}
+#endif // !YAKSA_REF_TEMPLATE
+
+#ifndef YAKSA_LEADING_NAMESPACE
+#define YAKSA_LEADING_NAMESPACE(name)\
+namespace name {
+#endif //YAKSA_LEADING_NAMESPACE
+
+#ifndef YAKSA_TAILING_NAMESPACE 
+#define YAKSA_TAILING_NAMESPACE }
+#endif // !YAKSA_TAILING_NAMESPACE
 
 	template<typename Type> struct TypeTemplate {
 		using  Type_ = Type;
@@ -201,11 +263,11 @@ namespace Yaksa{
 		typename WrapperType =
 		TemplateType<Type, void>,
 /*
-		//////////////////༺CODE DESCRIPTION༻//////////////////
+		༺☼☽☪☭----༺CODE DESCRIPTION༻----☭☪☽☼༻
 
 		For the purpose of Neat and Order
 		Finally Register All defined basic types in WrapperType
-		If you do n’t like this way,
+		If you don’t like this manner,
 		I will append a macro definition to isolate these later
 */
 		typename NativeViewType = ViewTypeDefine<Type>,
@@ -643,6 +705,31 @@ type_char* data, int len, int msgid);
 			}
 			return false;
 		 }
+		bool LoadAnsi(String path, String module_name) {
+
+			if (execPackageObj)
+			{
+				return true;
+			}
+
+			NativeModuleHandle module
+				= nullptr;
+			String dllPath =
+				path + module_name;
+			dllPath += ".dll";
+			module = LoadLibraryA(
+				_STRING_Const_Ptr_(dllPath)
+			);
+			if (module)
+			{
+				execPackageObj
+					= (execPackageObjectFunc)
+					GetProcAddress(module, "YaksaExec");
+
+				return true;
+			}
+			return false;
+		}
 #else
 		bool Load(type_char* path, type_char*module_name) {
 
@@ -688,4 +775,4 @@ type_char* data, int len, int msgid);
 
 }//Yaksa
 
-#endif
+#endif //__yaksa_framework_h___
